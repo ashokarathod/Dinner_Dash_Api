@@ -1,4 +1,6 @@
 class Api::V1::PostsController < ApplicationController
+  
+  before_action :find_post, only: [:show, :update, :destroy]
 
   def index
     @posts = Post.all
@@ -6,7 +8,6 @@ class Api::V1::PostsController < ApplicationController
   end
 
   def show
-    @post = Post.find(params[:id])
     render json: @post
   end
 
@@ -20,7 +21,6 @@ class Api::V1::PostsController < ApplicationController
   end
 
   def update
-    @post = Post.find(params[:id])
     if @post
       @post.update(post_params)
       render json: @post
@@ -30,7 +30,6 @@ class Api::V1::PostsController < ApplicationController
   end
 
   def destroy
-    @post = Post.find(params[:id])
     if @post
       @post.destroy
       render json: {message: "successfully deleted"}, status: 200
@@ -40,6 +39,10 @@ class Api::V1::PostsController < ApplicationController
   end
 
   private 
+  
+  def find_post
+    @post = Post.find(params[:id])
+  end
 
   def post_params
     params.permit(:post, :likes, :user_id)
